@@ -2,6 +2,7 @@ package com.ociweb.iot.maker;
 
 import java.util.ArrayList;
 
+import com.ociweb.gl.api.TelemetryConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -387,8 +388,9 @@ public class FogRuntime extends MsgRuntime<HardwareImpl, ListenerFilterIoT>  {
 
 		runtime.logStageScheduleRates();
 
-		if ( runtime.builder.isTelemetryEnabled()) {
-			runtime.gm.enableTelemetry(runtime.builder.telemetryHost(),8098);
+		TelemetryConfig telemetryConfig = runtime.builder.getTelemetryConfig();
+		if ( telemetryConfig != null) {
+			runtime.gm.enableTelemetry(telemetryConfig.getHost(),telemetryConfig.getPort());
 		}
 		//exportGraphDotFile();
 
@@ -416,7 +418,7 @@ public class FogRuntime extends MsgRuntime<HardwareImpl, ListenerFilterIoT>  {
 		logger.info("{} ms startup", lastTime = System.currentTimeMillis());
 		Hardware hardware = runtime.getHardware();
 		//this default for Fog is slower due to the expected minimum hardware of iot devices
-		hardware.setDefaultRate(100_000); // 1/10 of 1 ms
+		hardware.setDefaultRate(4_000_000); // 4 ms
 
 		app.declareConfiguration(hardware);
 		GraphManager.addDefaultNota(runtime.gm, GraphManager.SCHEDULE_RATE, runtime.builder.getDefaultSleepRateNS());
@@ -442,8 +444,9 @@ public class FogRuntime extends MsgRuntime<HardwareImpl, ListenerFilterIoT>  {
 		logger.info("{} ms duration {} ms finished building internal graph", nowTime = System.currentTimeMillis(), nowTime-lastTime);
 		lastTime = nowTime;
 
-		if ( runtime.builder.isTelemetryEnabled()) {
-			runtime.gm.enableTelemetry(runtime.builder.telemetryHost(),8098);
+		TelemetryConfig telemetryConfig = runtime.builder.getTelemetryConfig();
+		if ( telemetryConfig != null) {
+			runtime.gm.enableTelemetry(telemetryConfig.getHost(),telemetryConfig.getPort());
 			logger.info("{} ms duration {} ms finished building telemetry", lastTime = nowTime = System.currentTimeMillis(), nowTime-lastTime);
 		}
 		//exportGraphDotFile();
