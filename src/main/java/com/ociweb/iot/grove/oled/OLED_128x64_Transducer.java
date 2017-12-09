@@ -11,6 +11,7 @@ import com.ociweb.iot.grove.oled.Grove_OLED_128x64_Constants.Direction;
 import com.ociweb.iot.grove.oled.Grove_OLED_128x64_Constants.Orientation;
 import com.ociweb.iot.maker.FogCommandChannel;
 import com.ociweb.iot.maker.image.FogBitmapLayout;
+import com.ociweb.iot.maker.image.FogBitmap;
 import com.ociweb.iot.maker.image.FogColorSpace;
 import com.ociweb.iot.maker.image.FogPixelScanner;
 
@@ -40,15 +41,20 @@ public class OLED_128x64_Transducer extends BinaryOLED implements IODeviceTransd
 	 */
 	@Override
 	protected boolean init(){
+        System.out.println ("INIT: charge pump enabled");
+
 		cmd_out[0] = PUT_DISPLAY_TO_SLEEP;
-		cmd_out[1] = WAKE_DISPLAY;
-		cmd_out[2] = TURN_OFF_INVERSE_DISPLAY;
-		cmd_out[3] = DEACTIVATE_SCROLL;
-		cmd_out[4] = SET_MEMORY;
-		cmd_out[5] = 0x02;
-		cmd_out[6] = SET_DISPLAY_OFFSET;
-		cmd_out[7] = 0x00;
-		return sendCommands(0, 8);
+        cmd_out[1] = CHARGE_PUMP_SETTING;
+        cmd_out[2] = CHARGE_PUMP_ON;              /* Charge Pump Command */
+        cmd_out[3] = WAKE_DISPLAY;
+		cmd_out[4] = TURN_OFF_INVERSE_DISPLAY;
+		cmd_out[5] = DEACTIVATE_SCROLL;
+		cmd_out[6] = SET_MEMORY;
+		cmd_out[7] = 0x02;
+		cmd_out[8] = SET_DISPLAY_OFFSET;
+		cmd_out[9] = 0x00;
+
+		return sendCommands(0, 10);
 	}
 
 	@Override
@@ -57,8 +63,15 @@ public class OLED_128x64_Transducer extends BinaryOLED implements IODeviceTransd
 		bmpLayout.setComponentDepth((byte) 1);
 		bmpLayout.setWidth(colCount);
 		bmpLayout.setHeight(rowCount);
+
 		return bmpLayout;
 	}
+
+    @Override
+    public FogBitmap newEmptyBmp() {
+        // System.out.println ("newEmptyBmp");
+       return new FogBitmap(newBmpLayout());
+    }
 
 	@Override
 	public boolean display(FogPixelScanner scanner) {

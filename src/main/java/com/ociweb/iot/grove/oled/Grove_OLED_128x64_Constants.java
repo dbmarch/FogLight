@@ -67,6 +67,10 @@ public class Grove_OLED_128x64_Constants {
 	public static final byte TURN_OFF_INVERSE_DISPLAY = (byte)(0xA6 & 0xFF);
 	public static final byte TURN_ON_INVERSE_DISPLAY =  (byte)(0xA7 & 0xFF);
 
+    public static final byte CHARGE_PUMP_SETTING = (byte) (0x8D & 0xFF);
+    public static final byte CHARGE_PUMP_ON = (byte) (0x14 & 0xFF);
+    public static final byte CHARGE_PUMP_OFF = (byte) (0x10 & 0xFF);
+
 
 	public static final byte PUT_DISPLAY_TO_SLEEP = (byte)(0xAE & 0xFF);
 	public static final byte WAKE_DISPLAY = (byte)(0xAF & 0xFF);
